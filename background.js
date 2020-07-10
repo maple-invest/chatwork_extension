@@ -16,10 +16,22 @@ window.onload = function(){
 	setTimeout(function(){
 	     console.log("ccc!");
 	     	$(function(){
+	     		//読み込まれているメッセージ数を図りたかった　結果→リロード時40count
+	     		var counter = 0;
 	     		// _messageIdから始まるid要素を取得
+	     		// 自分宛てにメンションされた場合は「jYUPSi」classが指定されるので、それで処理から外すこと
 	     	    $("[id^='_messageId']").each(function(){
-	     	        var value = $(this).html();
-	     	        $(this).hide();//非表示化
+	     	    	counter++;
+
+	     	        var reply = $(this).find('pre').find('._replyMessage').html();
+
+	     	        //返信があるメッセージなら非表示化
+	     	        if(reply){
+	     	        	// ここに条件をカスタマイズして○件以上のリアクションがあれば回避とか面白そう
+	     	        	$(this).hide();//非表示化
+	     	        	return true;
+	     	        }
+	     	        
 
 	     //	        
 	     //	        if(!value) {
@@ -32,8 +44,11 @@ window.onload = function(){
 	     //	        
 	     //	        $(this).html('');
 
-	     	        console.log(value);
+	     	        //console.log(value);
+	     	        //console.log($(this).find('pre').find('div').html());
 	     	    });
+	     	    console.log("count!");
+	     	    console.log(counter);
 	     	});
 	},5000);
 }
