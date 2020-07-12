@@ -85,13 +85,35 @@ function rewrite_message(){
 }
 
 window.onload = function(){
-	console.log("bbb!");
+	console.log("window onload start!");
 
-	// chatworkのindex.jsでページ内容がロードされてるので、ロード終了まで待つ
-	// sleep処理はイケてないので読み込み終了をリスナーする仕組みにしたい
-	// あるいは一定時間毎に読み込みしなおすとか？
+	// chatworkのindex.jsでページ内容がロード完了するのを待つ
 	setTimeout(function(){
-		rewrite_message();
-	    console.log("ccc!");
-	},3000);
+		console.log("initialize  start!");
+
+		//オブザーバーの作成
+		var observer = new MutationObserver(rewrite_message);
+		//監視の開始
+		//チャット切り替え
+		observer.observe(document.getElementsByClassName('sc-epGmkI cMoFQn')[0], {
+		    attributes: true,
+		    childList:  true
+		});
+		//メッセージ追加ロード
+		observer.observe(document.getElementsByClassName('sc-dphlzf hnKbti')[0], {
+		    attributes: true,
+		    childList:  true
+		});
+		//初回起動
+	    rewrite_message();
+	},1000);
+
+	//メモ
+	// 課題1 : オブザーバーの連続起動問題（メッセージロード時）
+	// →　メッセージロード時の関数起動を少しだけwaitする
+	// メッセージは読み込めた物から反映されるが、そのたびにオブザーバーが変化検知して複数回起動するのが原因
+	// 課題2 : 別チャットロード時にオブザーバー２が無効化される（読み直しが必要）
+	// →　オブザーバ１の実行語処理にオブザーバー２の設定処理を組み込む
 }
+
+
