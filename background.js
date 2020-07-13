@@ -81,6 +81,14 @@ function rewrite_message(){
 	    });
 	    console.log("count!");
 	    console.log(counter);
+
+	    // メッセージdivがクリックされるとpreの表示/非表示を切り替える
+	    // 画面ロードされるたびにイベントを再登録する為にrewrite_messageに実装
+	    // offで登録済みのイベントを解除してから再度onしている
+	    $("[id^='_messageId']").off().on('click', function() {
+	      console.log($(this).text());
+	      $(this).find('pre').slideToggle('slow');
+	    });
 	});
 }
 
