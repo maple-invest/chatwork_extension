@@ -37,9 +37,9 @@ function fold_long_sentences(message_object){
 
 // 返信メッセージの非表示化
 function hide_reply_message(message_object){
-	// 自分宛てにメンションされた場合は「jYUPSi」classが指定されるので、それで処理から外すこと
 	var reply = message_object.find('pre').find('._replyMessage').html();
 
+	//早期リターンにすべき
 	//返信があるメッセージなら非表示化
 	if(reply){
 		// ここに条件をカスタマイズして○件以上のリアクションがあれば回避とか面白そう
@@ -67,6 +67,11 @@ function rewrite_message(){
 		// _messageIdから始まるid要素を取得
 	    $("[id^='_messageId']").each(function(){
 	    	counter++;
+
+	    	// 自分宛てに通知された場合は「fzprrx」classが指定されるので処理除外する
+	    	if($(this).hasClass('fzprrx')){
+	    		return true;
+	    	}
 
 	    	// 各関数は処理を行った場合に早期リターン(continue)する
 	    	if (hide_reply_message($(this))) {
