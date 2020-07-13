@@ -29,7 +29,7 @@ function fold_long_sentences(message_object){
 		var line_5 = message.indexOf(targetStr, line_4 + 1);
 
 		message_object.find('pre').hide();
-		message_object.find('pre').after('<pre>'+message.slice( 0, line_5 )+'</pre>');
+		message_object.find('pre').after('<pre style=\"border-bottom: dotted 2px #B7CFD3;\">'+message.slice( 0, line_5 )+'</pre>');
 		return true;
 	}
 	return false;
@@ -52,7 +52,7 @@ function hide_reply_message(message_object){
 		var message = message_object.find('pre').html();
 		var targetStr = "\n" ; // \r も必要？
 		var line_1 = message.indexOf(targetStr);
-		message_object.find('pre').after('<pre>'+message.slice( 0, line_1 )+'</pre>');
+		message_object.find('pre').after('<pre style=\"border-bottom: dotted 2px #B7CFD3;\">'+message.slice( 0, line_1 )+'</pre>');
 
 		return true;
 	}
@@ -134,5 +134,3 @@ window.onload = function(){
 	// 課題2 : 別チャットロード時にオブザーバー２が無効化される（読み直しが必要）
 	// →　オブザーバ１の実行語処理にオブザーバー２の設定処理を組み込む
 }
-
-
