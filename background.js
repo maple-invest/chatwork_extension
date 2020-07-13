@@ -61,6 +61,7 @@ function hide_reply_message(message_object){
 
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
 function rewrite_message(){
+	console.log("rewrite_message start!");
 	$(function(){
 		//読み込まれているメッセージ数を図りたかった　結果→リロード時40count
 		var counter = 0;
@@ -74,12 +75,12 @@ function rewrite_message(){
 	    	}
 
 	    	// 各関数は処理を行った場合に早期リターン(continue)する
-	    	if (hide_reply_message($(this))) {
-	    		return true;//continueと同様
-	    	}
-	    	if (fold_long_sentences($(this))) {
-	    		return true;
-	    	}
+	    	//if (hide_reply_message($(this))) {
+	    	//	return true;//continueと同様
+	    	//}
+	    	//if (fold_long_sentences($(this))) {
+	    	//	return true;
+	    	//}
 
 	//	    
 	//	    if(!value) {
@@ -108,34 +109,74 @@ function rewrite_message(){
 	});
 }
 
-window.onload = function(){
-	console.log("window onload start!");
+// チェットのメインとなるdiv要素を取得
+function load_container(target_class ,callbackFunc) {
+    // 読み出せるまで一定時間毎に実行
+    var id = setInterval(function () {
+    	//container = $('.sc-epGmkI, .cMoFQn')[0]
+    	//sub_container = $('.sc-dphlzf, .hnKbti')[0]
+    	container = $(target_class)[0]
 
-	// chatworkのindex.jsでページ内容がロード完了するのを待つ
-	setTimeout(function(){
-		console.log("initialize  start!");
+        if (container != null) {
+            // 読み込みが完了したらタイマー停止
+            clearInterval(id);
+            // コールバック関数を実行して要素を渡す
+            if (callbackFunc) callbackFunc(container);
+        }
+    }, 1000);
+}
+
+function create_sub_observer(){
+	load_container('.sc-dphlzf, .hnKbti', function (sub_container) {
+		console.log(sub_container);
 
 		//オブザーバーの作成
-		var observer = new MutationObserver(rewrite_message);
+		var sub_observer = new MutationObserver(rewrite_message);
+
+		//サブ要素（チャット内でのメッセージロード時に変化）
+		sub_observer.disconnect();
+		sub_observer.observe(sub_container, {
+		    attributes: true,
+		    childList:  true
+		});
+
+		// グローバルスコープで worl_flag を定義して一定時間以内の多重起動を阻止する
+		rewrite_message();
+	});
+
+}
+
+window.onload = function(){
+	console.log("initialize start!");
+
+	// onload → div要素ロード → オブザーバーset → サブオブザーバーset → rewrite_message実行
+
+	//メイン要素を取得して結果をコールバック関数の引数に渡す
+	//要素が取得できるまで待機して実行される
+	load_container('.sc-epGmkI, .cMoFQn', function (main_container) {
+		console.log(main_container);
+
+		//オブザーバーの作成
+		var main_observer = new MutationObserver(create_sub_observer);
+
 		//監視の開始
-		//チャット切り替え
-		observer.observe(document.getElementsByClassName('sc-epGmkI cMoFQn')[0], {
+		//メイン要素（チャット切り替え時に変化）
+		main_observer.disconnect();
+		main_observer.observe(main_container, {
 		    attributes: true,
 		    childList:  true
 		});
-		//メッセージ追加ロード
-		observer.observe(document.getElementsByClassName('sc-dphlzf hnKbti')[0], {
-		    attributes: true,
-		    childList:  true
-		});
-		//初回起動
-	    rewrite_message();
-	},1000);
+
+		create_sub_observer();
+
+		console.log("initialize complete!");
+	});
 
 	//メモ
 	// 課題1 : オブザーバーの連続起動問題（メッセージロード時）
 	// →　メッセージロード時の関数起動を少しだけwaitする
 	// メッセージは読み込めた物から反映されるが、そのたびにオブザーバーが変化検知して複数回起動するのが原因
-	// 課題2 : 別チャットロード時にオブザーバー２が無効化される（読み直しが必要）
-	// →　オブザーバ１の実行語処理にオブザーバー２の設定処理を組み込む
+
+
+
 }
