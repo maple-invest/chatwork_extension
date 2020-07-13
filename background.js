@@ -4,6 +4,7 @@
 
 console.log("extension loaded!");
 
+
 // 長文を折りたたむ
 function fold_long_sentences(message_object){
 	var message = message_object.find('pre').html();
@@ -59,9 +60,31 @@ function hide_reply_message(message_object){
 	return false;
 }
 
+var execute_flag = false;
+function is_multiple_execute(){
+	// 実行フラグが有効ならば短時間の多重起動なので早期リターン
+	if(execute_flag){
+		return true;
+	}
+
+	// 実行フラグを有効化して一定時間後に無効化する
+	execute_flag = true;
+	setTimeout(function(){
+		execute_flag = false;
+	},3000);
+	return false;
+}
+
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
 function rewrite_message(){
 	console.log("rewrite_message start!");
+
+	//　短時間の多重起動防止
+	if( is_multiple_execute() ){
+		//console.log("multiple execute block");
+		return false;
+	}
+
 	$(function(){
 		//読み込まれているメッセージ数を図りたかった　結果→リロード時40count
 		var counter = 0;
@@ -75,12 +98,12 @@ function rewrite_message(){
 	    	}
 
 	    	// 各関数は処理を行った場合に早期リターン(continue)する
-	    	//if (hide_reply_message($(this))) {
-	    	//	return true;//continueと同様
-	    	//}
-	    	//if (fold_long_sentences($(this))) {
-	    	//	return true;
-	    	//}
+	    	if (hide_reply_message($(this))) {
+	    		return true;//continueと同様
+	    	}
+	    	if (fold_long_sentences($(this))) {
+	    		return true;
+	    	}
 
 	//	    
 	//	    if(!value) {
