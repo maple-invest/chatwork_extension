@@ -28,7 +28,8 @@ function fold_long_sentences(message_object){
 		var line_4 = message.indexOf(targetStr, line_3 + 1);
 		var line_5 = message.indexOf(targetStr, line_4 + 1);
 
-		message_object.find('pre').html(message.slice( 0, line_5 ));
+		message_object.find('pre').hide();
+		message_object.find('pre').after('<pre>'+message.slice( 0, line_5 )+'</pre>');
 		return true;
 	}
 	return false;
@@ -42,7 +43,17 @@ function hide_reply_message(message_object){
 	//返信があるメッセージなら非表示化
 	if(reply){
 		// ここに条件をカスタマイズして○件以上のリアクションがあれば回避とか面白そう
-		message_object.hide();//非表示化
+		//message_object.hide();//要素を完全に非表示化
+		//message_object.find('pre').hide();//要素の返信相手と内容を非表示化（枠は残る）
+
+		//要素の1行目だけ残す（誰あての返信か分かりやすい）
+		message_object.find('pre').hide();
+		//後でリファクタリング（共通化可能）
+		var message = message_object.find('pre').html();
+		var targetStr = "\n" ; // \r も必要？
+		var line_1 = message.indexOf(targetStr);
+		message_object.find('pre').after('<pre>'+message.slice( 0, line_1 )+'</pre>');
+
 		return true;
 	}
 	return false;
