@@ -102,8 +102,9 @@ function rewrite_message(){
 	    	}
 	    	mark_as_processed($(this));
 
-	    	// 自分宛てに通知された場合は「fzprrx」classが指定されるので処理除外する
-	    	if($(this).hasClass('fzprrx')){
+	    	// 自分宛てに通知された場合は処理除外する
+	    	// [class 仕様] 通知ありTO : fzprrx / 通知ありRE : xnqWz
+	    	if($(this).hasClass('xnqWz') || $(this).hasClass('fzprrx')){
 	    		return true;
 	    	}
 
