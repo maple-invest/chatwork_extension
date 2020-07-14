@@ -75,6 +75,10 @@ function is_multiple_execute(){
 	return false;
 }
 
+function mark_as_processed(message_object){
+	message_object.append('<div class=\"processed_message\"></div>');
+}
+
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
 function rewrite_message(){
 	console.log("rewrite_message start!");
@@ -91,6 +95,12 @@ function rewrite_message(){
 		// _messageIdから始まるid要素を取得
 	    $("[id^='_messageId']").each(function(){
 	    	counter++;
+
+	    	//既に処理済みのメッセージの場合は処理除外する/未処理ならフラグ追加
+	    	if($(this).hasClass('processed_message')){
+	    		return true;
+	    	}
+	    	mark_as_processed($(this));
 
 	    	// 自分宛てに通知された場合は「fzprrx」classが指定されるので処理除外する
 	    	if($(this).hasClass('fzprrx')){
