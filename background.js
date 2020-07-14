@@ -76,7 +76,7 @@ function is_multiple_execute(){
 }
 
 function mark_as_processed(message_object){
-	message_object.append('<div class=\"processed_message\"></div>');
+	message_object.find('div').first().append('<div class=\"processed_message\"></div>');
 }
 
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
