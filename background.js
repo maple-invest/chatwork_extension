@@ -109,6 +109,13 @@ function rewrite_message(){
 	    	  $(this).find('pre').slideToggle('slow');
 	    	});
 
+	    	// 自分の投稿メッセージは処理除外
+	    	if($(this).find('._avatarHoverTip').data('aid') == $('#_myStatusIcon').find('img').data('aid') ){
+	    		//console.log($(this).find('._avatarHoverTip').data('aid'));
+	    		//console.log($('#_myStatusIcon').find('img').data('aid'));
+	    		return true;
+	    	}
+
 	    	// 自分宛てに通知された場合は処理除外する
 	    	// [class 仕様] 通知ありTO : fzprrx / 通知ありRE : xnqWz
 	    	if($(this).hasClass('xnqWz') || $(this).hasClass('fzprrx')){
