@@ -166,12 +166,13 @@ function load_container(target_class ,callbackFunc) {
     }, 1000);
 }
 
+//オブザーバーの作成
+var sub_observer = new MutationObserver(rewrite_message);
+var main_observer = new MutationObserver(create_sub_observer);
+
 function create_sub_observer(){
 	load_container('.sc-dphlzf, .hnKbti', function (sub_container) {
 		console.log(sub_container);
-
-		//オブザーバーの作成
-		var sub_observer = new MutationObserver(rewrite_message);
 
 		//サブ要素（チャット内でのメッセージロード時に変化）
 		sub_observer.disconnect();
@@ -196,8 +197,7 @@ window.onload = function(){
 	load_container('.sc-epGmkI, .cMoFQn', function (main_container) {
 		console.log(main_container);
 
-		//オブザーバーの作成
-		var main_observer = new MutationObserver(create_sub_observer);
+
 
 		//監視の開始
 		//メイン要素（チャット切り替え時に変化）
