@@ -60,21 +60,6 @@ function hide_reply_message(message_object){
 	return false;
 }
 
-var execute_flag = false;
-function is_multiple_execute(){
-	// 実行フラグが有効ならば短時間の多重起動なので早期リターン
-	if(execute_flag){
-		return true;
-	}
-
-	// 実行フラグを有効化して一定時間後に無効化する
-	execute_flag = true;
-	setTimeout(function(){
-		execute_flag = false;
-	},3000);
-	return false;
-}
-
 function mark_as_processed(message_object){
 	message_object.find('div').first().append('<div class=\"processed_message\"></div>');
 }
@@ -82,12 +67,6 @@ function mark_as_processed(message_object){
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
 function rewrite_message(){
 	console.log("rewrite_message start!");
-
-	//　短時間の多重起動防止
-	if( is_multiple_execute() ){
-		//console.log("multiple execute block");
-		return false;
-	}
 
 	$(function(){
 		//読み込まれているメッセージ数を図りたかった　結果→リロード時40count
