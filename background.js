@@ -97,7 +97,7 @@ function rewrite_message(){
 	    	counter++;
 
 	    	//既に処理済みのメッセージの場合は処理除外する/未処理ならフラグ追加
-	    	if($(this).hasClass('processed_message')){
+	    	if($(this).find('.processed_message').html() != null){
 	    		return true;
 	    	}
 	    	mark_as_processed($(this));
