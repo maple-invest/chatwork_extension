@@ -208,3 +208,14 @@ window.onload = function(){
     //アクションオブザーバーは変更検知したらタイマーの残り時間を減らす介入をする
 
 }
+
+
+
+// Read it using the storage API
+chrome.storage.sync.get(['foo', 'bar'], function(items) {
+  console.log('Settings retrieved', items);
+});
+// Save it using the Chrome extension storage API.
+chrome.storage.sync.set({'foo': 'inu', 'bar': 'wanwan'}, function() {
+  console.log('Settings saved');
+});

@@ -3,7 +3,8 @@
   "description": "沢山の表示でメッセージが流れてしまう現象を解決します",
   "version": "2.0",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "content_scripts": [
     //Twitter読み込み時
@@ -12,5 +13,6 @@
       "js"     : ["jquery-3.5.1.min.js","background.js"]
     }
   ],
+  "options_page": "option.html",
   "manifest_version": 2
 }

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatwork 表示すっきりツール</title>
+  <meta http-equiv="content-type" charset="utf-8">
+  <style>
+  h1 {
+    padding: 0.25em 0.5em;/*上下 左右の余白*/
+    color: #494949;/*文字色*/
+    background: transparent;/*背景透明に*/
+    border-left: solid 5px #7db4e6;/*左線*/
+  }
+
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  table{
+    border-collapse:collapse;
+    color:#005ab3;
+  }
+  tr:last-child td{
+    border-bottom:2px solid #005ab3;
+  }
+  td,th{
+    padding:10px;
+  }
+
+  .cp_ipselect {
+  	overflow: hidden;
+  	width: 90%;
+  	margin: 2em auto;
+  	text-align: center;
+  }
+  .cp_ipselect select {
+  	width: 100%;
+  	padding-right: 1em;
+  	cursor: pointer;
+  	text-indent: 0.01px;
+  	text-overflow: ellipsis;
+  	border: none;
+  	outline: none;
+  	background: transparent;
+  	background-image: none;
+  	box-shadow: none;
+  	-webkit-appearance: none;
+  	appearance: none;
+  }
+  .cp_ipselect select::-ms-expand {
+      display: none;
+  }
+  .cp_ipselect.cp_sl04 {
+  	position: relative;
+  	border-radius: 2px;
+  	border: 2px solid #2196F3;
+    border-radius: 50px;
+  	background: #ffffff;
+  }
+  .cp_ipselect.cp_sl04::before {
+  	position: absolute;
+  	top: 0.8em;
+  	right: 0.8em;
+  	width: 0;
+  	height: 0;
+  	padding: 0;
+  	content: '';
+  	border-left: 6px solid transparent;
+  	border-right: 6px solid transparent;
+  	border-top: 6px solid #2196F3;
+  	pointer-events: none;
+  }
+  .cp_ipselect.cp_sl04 select {
+  	padding: 8px 38px 8px 8px;
+  	color: #2196F3;
+  }
+  </style>
+</head>
+<body>
+
+<h1>Chatwork 表示すっきりツール</h1>
+
+<h2>こんなお悩みを解決します！</h2>
+<ul>
+<li>メッセージが流れる問題<ul>
+<li>自分に関係の無い返信メッセージが多くて読みにくい</li>
+<li>長文メッセージが多いとスクロールが大変</li>
+</ul>
+</li>
+</ul>
+<h2>このツールができること</h2>
+<ul>
+<li>長文メッセージの折りたたみ表示</li>
+<li>他人宛の返信メッセージの折りたたみ表示</li>
+<li>自分宛てに通知されるメッセージは折りたたみません</li>
+</ul>
+
+<h1>すっきり表示オプション</h1>
+
+<table id="option_form">
+  <tr>
+  	<td>
+  	  <h4>返信の省略表示</h4>
+  	</td>
+  	<td>
+  	  <p>他人宛の返信[REメッセージ]を折りたたみ表示にします</p>
+  	</td>
+  	<td>
+  	  <img src="rep.gif" alt="説明画像" height="50%">
+  	</td>
+  	<td>
+  	  <label class="switch">
+  	    <input type="checkbox" id="fold_repry" checked>
+  	    <span class="slider round"></span>
+  	  </label>
+  	</td>
+  </tr>
+  <tr>
+  	<td>
+  	</td>
+  	<td>
+  	  <p>折りたたみ時の表示行数</p>
+  	</td>
+  	<td>
+  	  <img src="rep.gif" alt="説明画像" height="50%">
+  	</td>
+  	<td>
+  	  <div class="cp_ipselect cp_sl04">
+  	  <select required id="line_count_repry">
+  	  <option value="1">1</option>
+  	  <option value="2">2</option>
+  	  <option value="3">3</option>
+  	  <option value="4">4</option>
+  	  <option value="5">5</option>
+  	  <option value="6">6</option>
+  	  <option value="7">7</option>
+  	  <option value="8">8</option>
+  	  <option value="9">9</option>
+  	  </select>
+  	  </div>
+  	</td>
+  </tr>
+  <tr>
+  	<td>
+  	  <h4>長文の省略表示</h4>
+  	</td>
+  	<td>
+  	  <p>一定行数を超える長文を折りたたみ表示にします</p>
+  	</td>
+  	<td>
+  	  <img src="rep.gif" alt="説明画像" height="50%">
+  	</td>
+  	<td>
+  	  <label class="switch">
+  	    <input type="checkbox" id="fold_long_sentences" checked>
+  	    <span class="slider round"></span>
+  	  </label>
+  	</td>
+  </tr>
+  <tr>
+  	<td>
+  	</td>
+  	<td>
+  	  <p>折りたたみ時の表示行数</p>
+  	</td>
+  	<td>
+  	  <img src="rep.gif" alt="説明画像" height="50%">
+  	</td>
+  	<td>
+  	  <div class="cp_ipselect cp_sl04">
+  	  <select required id="line_count_long_sentences">
+  	  <option value="1">1</option>
+  	  <option value="2">2</option>
+  	  <option value="3">3</option>
+  	  <option value="4">4</option>
+  	  <option value="5">5</option>
+  	  <option value="6">6</option>
+  	  <option value="7">7</option>
+  	  <option value="8">8</option>
+  	  <option value="9">9</option>
+  	  </select>
+  	  </div>
+  	</td>
+  </tr>
+</table>
+
+<script src="option.js"></script>
+</body>
+</html>
