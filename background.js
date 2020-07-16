@@ -4,6 +4,35 @@
 
 console.log("extension loaded!");
 
+var setting = {
+    'line_count_repry': 1,
+	'line_count_long_sentences': 5,
+	'fold_repry': true,
+	'fold_long_sentences': true
+}
+
+function load_option(){
+	chrome.storage.sync.get([
+		'line_count_repry',
+		'line_count_long_sentences',
+		'fold_repry',
+		'fold_long_sentences'], function(items) {
+			if(items.fold_repry == null){
+				console.log("setting init!")
+				chrome.storage.sync.set(setting);
+			}else{
+				console.log("setting load!")
+				setting.line_count_repry = items.line_count_repry
+				setting.line_count_long_sentences = items.line_count_long_sentences
+				setting.fold_repry = items.fold_repry
+				setting.fold_long_sentences = items.fold_long_sentences
+				console.log(setting)
+			}
+	});
+}
+
+console.log("option load!");
+load_option()
 
 // 長文を折りたたむ
 function fold_long_sentences(message_object){
@@ -214,14 +243,3 @@ window.onload = function(){
     //アクションオブザーバーは変更検知したらタイマーの残り時間を減らす介入をする
 
 }
-
-
-
-// Read it using the storage API
-chrome.storage.sync.get(['foo', 'bar'], function(items) {
-  console.log('Settings retrieved', items);
-});
-// Save it using the Chrome extension storage API.
-chrome.storage.sync.set({'foo': 'inu', 'bar': 'wanwan'}, function() {
-  console.log('Settings saved');
-});
