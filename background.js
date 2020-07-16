@@ -36,8 +36,15 @@ load_option()
 
 // 長文を折りたたむ
 function fold_long_sentences(message_object){
+	// 設定が無効 OR メッセージが無い場合はスキップ
 	var message = message_object.find('pre').html();
-	if (message == null) {
+	if ( !setting.fold_long_sentences || message == null) {
+		return false;
+	}
+
+	// 返信メッセージは hide_reply_message 管轄なのでスキップ
+	var reply = message_object.find('pre').find('._replyMessage').html();
+	if(reply){
 		return false;
 	}
 	
@@ -46,20 +53,16 @@ function fold_long_sentences(message_object){
 	var targetStr = "\n" ; // \r も必要？
 	var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
 
-	console.log(message)
-	console.log(message.length)
-	console.log(line_count)
-
-	// 5行目で文字表示を打ち切る書き換え
-	if(line_count > 5){
-		var line_1 = message.indexOf(targetStr);
-		var line_2 = message.indexOf(targetStr, line_1 + 1);
-		var line_3 = message.indexOf(targetStr, line_2 + 1);
-		var line_4 = message.indexOf(targetStr, line_3 + 1);
-		var line_5 = message.indexOf(targetStr, line_4 + 1);
-
+	// 指定行で文字表示を打ち切る書き換え
+	limit = setting.line_count_long_sentences
+	if(line_count > limit){
+		line = []
+		line[0] = message.indexOf(targetStr);
+		for (let i = 0; i < limit-1; i++) {
+		    line[i+1] = message.indexOf(targetStr, line[i] + 1);
+		}
 		message_object.find('pre').hide();
-		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line_5 )+'</pre>');
+		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>');
 		return true;
 	}
 	return false;
@@ -67,6 +70,10 @@ function fold_long_sentences(message_object){
 
 // 返信メッセージの非表示化
 function hide_reply_message(message_object){
+	//設定が無効ならスキップ
+	if(!setting.fold_repry){
+		return false;
+	}
 	var reply = message_object.find('pre').find('._replyMessage').html();
 
 	//早期リターンにすべき
@@ -77,14 +84,25 @@ function hide_reply_message(message_object){
 		//message_object.find('pre').hide();//要素の返信相手と内容を非表示化（枠は残る）
 
 		//要素の1行目だけ残す（誰あての返信か分かりやすい）
-		message_object.find('pre').hide();
+		//message_object.find('pre').hide();
 		//後でリファクタリング（共通化可能）
 		var message = message_object.find('pre').html();
 		var targetStr = "\n" ; // \r も必要？
-		var line_1 = message.indexOf(targetStr);
-		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line_1 )+'</pre>');
+		var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
 
-		return true;
+		// 指定行で文字表示を打ち切る書き換え
+		limit = setting.line_count_repry
+		if(line_count > limit){
+			line = []
+			line[0] = message.indexOf(targetStr);
+			for (let i = 0; i < limit-1; i++) {
+			    line[i+1] = message.indexOf(targetStr, line[i] + 1);
+			}
+			message_object.find('pre').hide();
+			message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>');
+
+			return true;
+		}
 	}
 	return false;
 }
