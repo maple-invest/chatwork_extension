@@ -30,7 +30,7 @@ function fold_long_sentences(message_object){
 		var line_5 = message.indexOf(targetStr, line_4 + 1);
 
 		message_object.find('pre').hide();
-		message_object.find('pre').after('<pre style=\"border-bottom: dotted 2px #B7CFD3;\">'+message.slice( 0, line_5 )+'</pre>');
+		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line_5 )+'</pre>');
 		return true;
 	}
 	return false;
@@ -53,7 +53,7 @@ function hide_reply_message(message_object){
 		var message = message_object.find('pre').html();
 		var targetStr = "\n" ; // \r も必要？
 		var line_1 = message.indexOf(targetStr);
-		message_object.find('pre').after('<pre style=\"border-bottom: dotted 2px #B7CFD3;\">'+message.slice( 0, line_1 )+'</pre>');
+		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line_1 )+'</pre>');
 
 		return true;
 	}
@@ -80,13 +80,6 @@ function rewrite_message(){
 	    		return true;
 	    	}
 	    	mark_as_processed($(this));
-
-	    	// メッセージdivがクリックされるとpreの表示/非表示を切り替える
-	    	// 画面ロードされるたびにイベントを再登録する為にrewrite_messageに実装
-	    	// offで登録済みのイベントを解除してから再度onしている
-	    	$(this).find('.sc-hARARD').off().on('click', function() {
-	    	  $(this).find('pre').slideToggle('slow');
-	    	});
 
 	    	// 自分の投稿メッセージは処理除外
 	    	if($(this).find('._avatarHoverTip').data('aid') == $('#_myStatusIcon').find('img').data('aid') ){
@@ -125,6 +118,19 @@ function rewrite_message(){
 	    });
 	    console.log("count!");
 	    console.log(counter);
+
+	    // メッセージdivがクリックされるとpreの表示/非表示を切り替える
+	    // 画面ロードされるたびにイベントを再登録する為にrewrite_messageに実装
+	    // offで登録済みのイベントを解除してから再度onしている
+	    $("[id^='_messageId']").each(function(){
+	    	// 折りたたまれてないメッセージは処理スキップ
+	    	if( $(this).find('.was_folded').html() == null ){
+	    		return true;
+	    	}
+	    	$(this).find('pre').off().on('click', function() {
+	    	  $(this).parent().find('pre').slideToggle('slow');
+	    	});
+	    });
 	});
 }
 
