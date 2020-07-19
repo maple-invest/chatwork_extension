@@ -26,6 +26,24 @@ function load_option(){
 }
 load_option();
 
+// 指定行で打ち切った表示内容を返す
+function slice_message(message, limit){
+	// 正規表現で改行コードを検索→該当したら配列に追加→lenghtでカウント
+	// 0から数えるので補正値+1をする
+	var targetStr = "\n";
+	var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
+
+	if(line_count > limit){
+		line = []
+		line[0] = message.indexOf(targetStr);
+		for (let i = 0; i < limit-1; i++) {
+		    line[i+1] = message.indexOf(targetStr, line[i] + 1);
+		}
+		return '<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>';
+	}
+	return false;
+}
+
 // 長文を折りたたむ
 function fold_long_sentences(message_object){
 	// 設定が無効 OR メッセージが無い場合はスキップ
@@ -39,22 +57,11 @@ function fold_long_sentences(message_object){
 	if(reply){
 		return false;
 	}
-	
-	// 正規表現で改行コードを検索→該当したら配列に追加→lenghtでカウント
-	// 0から数えるので補正値+1をする
-	var targetStr = "\n";
-	var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
 
-	// 指定行で文字表示を打ち切る書き換え
-	limit = setting.line_count_long_sentences
-	if(line_count > limit){
-		line = []
-		line[0] = message.indexOf(targetStr);
-		for (let i = 0; i < limit-1; i++) {
-		    line[i+1] = message.indexOf(targetStr, line[i] + 1);
-		}
+	var str = slice_message(message, setting.line_count_long_sentences)
+	if ( str ){
 		message_object.find('pre').hide();
-		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>');
+		message_object.find('pre').after(str);
 		return true;
 	}
 	return false;
@@ -68,21 +75,10 @@ function hide_reply_message(message_object){
 		return false;
 	}
 
-	// 後でリファクタリング（共通化可能）
-	var message = message_object.find('pre').html();
-	var targetStr = "\n";
-	var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
-
-	// 指定行で文字表示を打ち切る書き換え
-	limit = setting.line_count_repry
-	if(line_count > limit){
-		line = []
-		line[0] = message.indexOf(targetStr);
-		for (let i = 0; i < limit-1; i++) {
-		    line[i+1] = message.indexOf(targetStr, line[i] + 1);
-		}
+	var str = slice_message(message_object.find('pre').html(), setting.line_count_repry)
+	if ( str ){
 		message_object.find('pre').hide();
-		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>');
+		message_object.find('pre').after(str);
 		return true;
 	}
 	return false;
