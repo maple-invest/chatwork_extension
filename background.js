@@ -194,13 +194,13 @@ function view_initial_explanation(){
 }
 
 window.onload = function(){
-  // 初回起動時に説明画面を表示する
-  view_initial_explanation();
-
   // onload → div要素ロード → オブザーバーset → サブオブザーバーset → rewrite_message実行
   //メイン要素を取得して結果をコールバック関数の引数に渡す
   //要素が取得できるまで待機して実行される
   load_container('.sc-epGmkI, .cMoFQn', function (main_container) {
+    // 初回起動時に説明画面を表示する
+    view_initial_explanation();
+
     //監視の開始 メイン要素（チャット切り替え時に変化）
     main_observer.disconnect();
     main_observer.observe(main_container, {
