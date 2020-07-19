@@ -220,9 +220,6 @@ function create_sub_observer(){
 }
 
 function view_initial_explanation(){
-	// デバック用データ
-	chrome.storage.sync.set({ 'initial_explanation_skip': false });
-
 	chrome.storage.sync.get('initial_explanation_skip', function(items) {
 		if( items.initial_explanation_skip ){
 			return false;
