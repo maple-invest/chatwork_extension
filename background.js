@@ -91,6 +91,7 @@ function mark_as_processed(message_object){
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
 function rewrite_message(){
 	$(function(){
+		var my_aid = $('#_myStatusIcon').find('img').data('aid')
 		// _messageIdから始まるid要素を取得
 	    $("[id^='_messageId']").each(function(){
 	    	//既に処理済みのメッセージの場合は処理除外する/未処理ならフラグ追加
@@ -100,7 +101,7 @@ function rewrite_message(){
 	    	mark_as_processed($(this));
 
 	    	// 自分の投稿メッセージは処理除外
-	    	if($(this).find('._avatarHoverTip').data('aid') == $('#_myStatusIcon').find('img').data('aid') ){
+	    	if($(this).find('._avatarHoverTip').data('aid') == my_aid ){
 	    		return true;
 	    	}
 
