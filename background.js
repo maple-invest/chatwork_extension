@@ -1,9 +1,6 @@
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright (c) 2020 メープル＠ペンギン会員 All rights reserved.
 
-console.log("extension loaded!");
-
+// 初期設定のロード
 var setting = {
     'line_count_repry': 1,
 	'line_count_long_sentences': 5,
@@ -18,21 +15,16 @@ function load_option(){
 		'fold_repry',
 		'fold_long_sentences'], function(items) {
 			if(items.fold_repry == null){
-				console.log("setting init!")
 				chrome.storage.sync.set(setting);
 			}else{
-				console.log("setting load!")
 				setting.line_count_repry = items.line_count_repry
 				setting.line_count_long_sentences = items.line_count_long_sentences
 				setting.fold_repry = items.fold_repry
 				setting.fold_long_sentences = items.fold_long_sentences
-				console.log(setting)
 			}
 	});
 }
-
-console.log("option load!");
-load_option()
+load_option();
 
 // 長文を折りたたむ
 function fold_long_sentences(message_object){
@@ -50,7 +42,7 @@ function fold_long_sentences(message_object){
 	
 	// 正規表現で改行コードを検索→該当したら配列に追加→lenghtでカウント
 	// 0から数えるので補正値+1をする
-	var targetStr = "\n" ; // \r も必要？
+	var targetStr = "\n";
 	var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
 
 	// 指定行で文字表示を打ち切る書き換え
@@ -70,39 +62,28 @@ function fold_long_sentences(message_object){
 
 // 返信メッセージの非表示化
 function hide_reply_message(message_object){
-	//設定が無効ならスキップ
-	if(!setting.fold_repry){
+	// 設定が無効 OR メッセージが無い場合はスキップ
+	var reply = message_object.find('pre').find('._replyMessage').html();
+	if(!setting.fold_repry || reply == null){
 		return false;
 	}
-	var reply = message_object.find('pre').find('._replyMessage').html();
 
-	//早期リターンにすべき
-	//返信があるメッセージなら非表示化
-	if(reply){
-		// ここに条件をカスタマイズして○件以上のリアクションがあれば回避とか面白そう
-		//message_object.hide();//要素を完全に非表示化
-		//message_object.find('pre').hide();//要素の返信相手と内容を非表示化（枠は残る）
+	// 後でリファクタリング（共通化可能）
+	var message = message_object.find('pre').html();
+	var targetStr = "\n";
+	var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
 
-		//要素の1行目だけ残す（誰あての返信か分かりやすい）
-		//message_object.find('pre').hide();
-		//後でリファクタリング（共通化可能）
-		var message = message_object.find('pre').html();
-		var targetStr = "\n" ; // \r も必要？
-		var line_count = ( message.match( new RegExp( targetStr, "g" ) ) || [] ).length + 1;
-
-		// 指定行で文字表示を打ち切る書き換え
-		limit = setting.line_count_repry
-		if(line_count > limit){
-			line = []
-			line[0] = message.indexOf(targetStr);
-			for (let i = 0; i < limit-1; i++) {
-			    line[i+1] = message.indexOf(targetStr, line[i] + 1);
-			}
-			message_object.find('pre').hide();
-			message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>');
-
-			return true;
+	// 指定行で文字表示を打ち切る書き換え
+	limit = setting.line_count_repry
+	if(line_count > limit){
+		line = []
+		line[0] = message.indexOf(targetStr);
+		for (let i = 0; i < limit-1; i++) {
+		    line[i+1] = message.indexOf(targetStr, line[i] + 1);
 		}
+		message_object.find('pre').hide();
+		message_object.find('pre').after('<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>');
+		return true;
 	}
 	return false;
 }
@@ -113,15 +94,9 @@ function mark_as_processed(message_object){
 
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
 function rewrite_message(){
-	console.log("rewrite_message start!");
-
 	$(function(){
-		//読み込まれているメッセージ数を図りたかった　結果→リロード時40count
-		var counter = 0;
 		// _messageIdから始まるid要素を取得
 	    $("[id^='_messageId']").each(function(){
-	    	counter++;
-
 	    	//既に処理済みのメッセージの場合は処理除外する/未処理ならフラグ追加
 	    	if($(this).find('.processed_message').html() != null){
 	    		return true;
@@ -130,8 +105,6 @@ function rewrite_message(){
 
 	    	// 自分の投稿メッセージは処理除外
 	    	if($(this).find('._avatarHoverTip').data('aid') == $('#_myStatusIcon').find('img').data('aid') ){
-	    		//console.log($(this).find('._avatarHoverTip').data('aid'));
-	    		//console.log($('#_myStatusIcon').find('img').data('aid'));
 	    		return true;
 	    	}
 
@@ -141,30 +114,14 @@ function rewrite_message(){
 	    		return true;
 	    	}
 
-	    	// 各関数は処理を行った場合に早期リターン(continue)する
+	    	// 各関数は処理を行った場合にcontinueする
 	    	if (hide_reply_message($(this))) {
-	    		return true;//continueと同様
+	    		return true;
 	    	}
 	    	if (fold_long_sentences($(this))) {
 	    		return true;
 	    	}
-
-	//	    
-	//	    if(!value) {
-	//	        return true;
-	//	    }
-	//	    
-	//	    if(value.indexOf('Symfoware') == -1) {
-	//	        return true;
-	//	    }
-	//	    
-	//	    $(this).html('');
-
-	        //console.log(value);
-	        //console.log($(this).find('pre').find('div').html());
 	    });
-	    console.log("count!");
-	    console.log(counter);
 
 	    // メッセージdivがクリックされるとpreの表示/非表示を切り替える
 	    // 画面ロードされるたびにイベントを再登録する為にrewrite_messageに実装
@@ -185,10 +142,7 @@ function rewrite_message(){
 function load_container(target_class ,callbackFunc) {
     // 読み出せるまで一定時間毎に実行
     var id = setInterval(function () {
-    	//container = $('.sc-epGmkI, .cMoFQn')[0]
-    	//sub_container = $('.sc-dphlzf, .hnKbti')[0]
     	container = $(target_class)[0]
-
         if (container != null) {
             // 読み込みが完了したらタイマー停止
             clearInterval(id);
@@ -204,7 +158,6 @@ var main_observer = new MutationObserver(create_sub_observer);
 
 function create_sub_observer(){
 	load_container('.sc-dphlzf, .hnKbti', function (sub_container) {
-		console.log(sub_container);
 
 		//サブ要素（チャット内でのメッセージロード時に変化）
 		sub_observer.disconnect();
@@ -213,7 +166,6 @@ function create_sub_observer(){
 		    childList:  true
 		});
 
-		// グローバルスコープで worl_flag を定義して一定時間以内の多重起動を阻止する
 		rewrite_message();
 	});
 
@@ -244,22 +196,14 @@ function view_initial_explanation(){
 }
 
 window.onload = function(){
-	console.log("initialize start!");
-
 	// 初回起動時に説明画面を表示する
 	view_initial_explanation();
 
 	// onload → div要素ロード → オブザーバーset → サブオブザーバーset → rewrite_message実行
-
 	//メイン要素を取得して結果をコールバック関数の引数に渡す
 	//要素が取得できるまで待機して実行される
 	load_container('.sc-epGmkI, .cMoFQn', function (main_container) {
-		console.log(main_container);
-
-
-
-		//監視の開始
-		//メイン要素（チャット切り替え時に変化）
+		//監視の開始 メイン要素（チャット切り替え時に変化）
 		main_observer.disconnect();
 		main_observer.observe(main_container, {
 		    attributes: true,
@@ -267,24 +211,5 @@ window.onload = function(){
 		});
 
 		create_sub_observer();
-
-		console.log("initialize complete!");
 	});
-
-	//メモ
-	// 課題1 : オブザーバーの連続起動問題（メッセージロード時）
-	// →　メッセージロード時の関数起動を少しだけwaitする
-	// メッセージは読み込めた物から反映されるが、そのたびにオブザーバーが変化検知して複数回起動するのが原因
-
-    // サブオブザーバーの多重起動問題
-    // 新しいメッセージのロード時にサブオブザーバー複数が同時にrewriteを読んでしまう
-    // メッセージをロードするたびにサブオブザーバーが増えるので酷いことになる
-
-    // オブザーバー起動時にログを履かせて調査する
-    // 起動する毎にカウントを増やすログを出して動きを解明する
-
-    //別なアプローチ
-    //タイマーで一定時間毎にrewriteする仕組みにする
-    //アクションオブザーバーは変更検知したらタイマーの残り時間を減らす介入をする
-
 }

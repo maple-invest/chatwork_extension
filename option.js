@@ -28,7 +28,7 @@ function restore_options() {
   });
 }
 
-//todo : リファクタリング
+// todo : リファクタリング
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('line_count_repry').addEventListener('change', save_options);
 document.getElementById('line_count_long_sentences').addEventListener('change', save_options);
