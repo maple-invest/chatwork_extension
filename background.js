@@ -219,8 +219,35 @@ function create_sub_observer(){
 
 }
 
+function view_initial_explanation(){
+	// デバック用データ
+	chrome.storage.sync.set({ 'initial_explanation_skip': false });
+
+	chrome.storage.sync.get('initial_explanation_skip', function(items) {
+		if( items.initial_explanation_skip ){
+			return false;
+		}else{
+			$('body').prepend('<div class=\"popup show\"><div class=\"content_back\"></div><div class=\"content\"><p>「Chatwork 表示すっきりツール」をご利用頂き有難うございます！</p><button class=\"btn-square\" id=\"close\">使ってみる！</button></div><div class=\"content_back\"></div></div>');
+			$(".popup").css({"display": "none", "height": "100vh", "width": "100%", "position": "fixed", "z-index": "2", "top": "0", "left": "0"});
+			$(".content_back").css({"height": "100vh", "width": "25%", "background": "black", "opacity": "0.7",});
+			$(".content").css({"background": "#fff", "padding": "30px", "width": "50%", "text-align": "center"});
+			$(".show").css({"display": "flex", "justify-content": "center", "align-items": "center"});
+			$(".btn-square").css({"position": "relative", "display": "inline-block", "padding": "0.25em 0.5em", "text-decoration": "none", "color": "#FFF", "background": "#fd9535", "border-bottom": "solid 2px #d27d00", "border-radius": "4px", "font-weight": "bold", "align-items": "center"});
+
+			$("#close").on("click", function() {
+			  $(".popup").fadeOut();
+			  // 確認ボタンをクリックするとskipフラグが登録されて、移行は説明画面を表示しなくなる
+			  chrome.storage.sync.set({ 'initial_explanation_skip': true });
+			});
+		}
+	});
+}
+
 window.onload = function(){
 	console.log("initialize start!");
+
+	// 初回起動時に説明画面を表示する
+	view_initial_explanation();
 
 	// onload → div要素ロード → オブザーバーset → サブオブザーバーset → rewrite_message実行
 
