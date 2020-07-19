@@ -76,10 +76,8 @@
     border-collapse:collapse;
     color:#005ab3;
   }
-  tr:last-child td{
-    border-bottom:2px solid #005ab3;
-  }
   td,th{
+  	border:1px solid #005ab3;
     padding:10px;
   }
 
@@ -155,14 +153,14 @@
 
 <table id="option_form">
   <tr>
-  	<td>
+  	<td rowspan="2">
   	  <h4>返信の省略表示</h4>
+  	</td>
+  	<td rowspan="2">
+  	  <img src="reply.png" alt="説明画像" height="50%">
   	</td>
   	<td>
   	  <p>他人宛の返信[REメッセージ]を折りたたみ表示にします</p>
-  	</td>
-  	<td>
-  	  <img src="rep.gif" alt="説明画像" height="50%">
   	</td>
   	<td>
   	  <label class="switch">
@@ -173,12 +171,7 @@
   </tr>
   <tr>
   	<td>
-  	</td>
-  	<td>
   	  <p>折りたたみ時の表示行数</p>
-  	</td>
-  	<td>
-  	  <img src="rep.gif" alt="説明画像" height="50%">
   	</td>
   	<td>
   	  <div class="cp_ipselect cp_sl04">
@@ -197,14 +190,14 @@
   	</td>
   </tr>
   <tr>
-  	<td>
+  	<td rowspan="2">
   	  <h4>長文の省略表示</h4>
+  	</td>
+  	<td rowspan="2">
+  	  <img src="long.png" alt="説明画像" height="50%">
   	</td>
   	<td>
   	  <p>一定行数を超える長文を折りたたみ表示にします</p>
-  	</td>
-  	<td>
-  	  <img src="rep.gif" alt="説明画像" height="50%">
   	</td>
   	<td>
   	  <label class="switch">
@@ -215,12 +208,7 @@
   </tr>
   <tr>
   	<td>
-  	</td>
-  	<td>
   	  <p>折りたたみ時の表示行数</p>
-  	</td>
-  	<td>
-  	  <img src="rep.gif" alt="説明画像" height="50%">
   	</td>
   	<td>
   	  <div class="cp_ipselect cp_sl04">
