@@ -177,10 +177,10 @@ function view_initial_explanation(){
       explanation_2_url = chrome.extension.getURL('explanation_2.png');
 
       // ToDo : リファクタリング
-      $('body').prepend('<div class=\"popup show\"><div class=\"content_back\"></div><div class=\"content\"><div style=\"height: 80%; overflow-y: scroll;\"><h1>「Chatwork 表示すっきりツール」をご利用頂き有難うございます！</h1><br/><br/><h2>こんなお悩みを解決します！</h2><ul><li>メッセージが流れる問題</li><li>自分に関係の無い返信メッセージが多くて読みにくい</li><li>長文メッセージが多いとスクロールが大変</li></ul><br/><br/><h2>このツールができること</h2><ul><li>長文メッセージの折りたたみ表示</li><li>他人宛の返信メッセージの折りたたみ表示</li><li>自分宛てに通知されるメッセージは折りたたみません</li></ul><img src=\"'+explanation_1_url+'\", width=\"100%\"><br/><img src=\"'+explanation_2_url+'\", width=\"100%\"></div><button class=\"btn-square\" id=\"close\">使ってみる！</button></div><div class=\"content_back\"></div></div>');
+      $('body').prepend('<div class=\"popup show\"><div class=\"content_back\"></div><div class=\"content\" id=\"cwt_content\"><div style=\"height: 80%; overflow-y: scroll;\"><h1>「Chatwork 表示すっきりツール」をご利用頂き有難うございます！</h1><br/><br/><h2>こんなお悩みを解決します！</h2><ul><li>メッセージが流れる問題</li><li>自分に関係の無い返信メッセージが多くて読みにくい</li><li>長文メッセージが多いとスクロールが大変</li></ul><br/><br/><h2>このツールができること</h2><ul><li>長文メッセージの折りたたみ表示</li><li>他人宛の返信メッセージの折りたたみ表示</li><li>自分宛てに通知されるメッセージは折りたたみません</li></ul><img src=\"'+explanation_1_url+'\", width=\"100%\"><br/><img src=\"'+explanation_2_url+'\", width=\"100%\"></div><button class=\"btn-square\" id=\"close\">使ってみる！</button></div><div class=\"content_back\"></div></div>');
       $(".popup").css({"display": "none", "height": "100%", "width": "100%", "position": "fixed", "z-index": "2", "top": "0", "left": "0"});
       $(".content_back").css({"height": "100%", "width": "15%", "background": "black", "opacity": "0.7",});
-      $(".content").css({"background": "#fff", "padding": "30px", "width": "80%"});
+      $("#cwt_content").css({"background": "#fff", "padding": "30px", "width": "80%"});
       $(".show").css({"display": "flex", "justify-content": "center", "align-items": "center"});
       $(".btn-square").css({"position": "relative", "display": "inline-block", "padding": "0.25em 0.5em", "text-decoration": "none", "color": "#FFF", "background": "#fd9535", "border-bottom": "solid 2px #d27d00", "border-radius": "4px", "font-weight": "bold", "align-items": "center", "width": "60%", "margin": "3% 20%"});
 
