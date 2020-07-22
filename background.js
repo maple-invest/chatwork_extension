@@ -198,6 +198,37 @@ function view_initial_explanation(){
   });
 }
 
+function draw_tool_menu(){
+  menu_img_url = chrome.extension.getURL('icon48.png');
+  menu_return_img_url = chrome.extension.getURL('cwt_menu_return.png');
+
+  // ヘッダーにアイコンを追加
+  $('#_roomTitle').after('<div id=\"cwt_menu\"><img src=\"'+menu_img_url+'\" height="24"\"></div>')
+
+  // メニューを描画
+  $("#cwt_menu").on({
+    "mouseenter": function(){
+      $(this).append('<div class=\"guide\" style=\"position: absolute;\">')
+      style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #6091d3; background: #FFF; border: solid 2px #6091d3; border-radius: 7px;\""
+      $(this).find(".guide").append('<div id=\"cwt_menu_return\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> 省略表示のON/OFFを反転</div>')
+
+      // return 実行時の処理
+      $("#cwt_menu_return").on("click", function() {
+        $("[id^='_messageId']").each(function(){
+          // 処理されてないメッセージはスキップ
+          if( $(this).find('.was_folded').html() == null ){
+            return true;
+          }
+          $(this).find('pre').slideToggle('slow');
+        });
+      });
+    },
+    "mouseleave": function(){
+      $(this).find('.guide').remove();
+    }
+  });
+}
+
 window.onload = function(){
   // onload → div要素ロード → オブザーバーset → サブオブザーバーset → rewrite_message実行
   //メイン要素を取得して結果をコールバック関数の引数に渡す
@@ -205,6 +236,9 @@ window.onload = function(){
   load_container('.sc-epGmkI, .cMoFQn', function (main_container) {
     // 初回起動時に説明画面を表示する
     view_initial_explanation();
+
+    // メニューを描画する
+    draw_tool_menu();
 
     //監視の開始 メイン要素（チャット切り替え時に変化）
     main_observer.disconnect();
