@@ -27,7 +27,7 @@ function load_option(){
 load_option();
 
 // 指定行で打ち切った表示内容を返す
-function slice_message(message, limit){
+function slice_message(message, limit, font_class){
   // 正規表現で改行コードを検索→該当したら配列に追加→lenghtでカウント
   // 0から数えるので補正値+1をする
   var targetStr = "\n";
@@ -39,7 +39,7 @@ function slice_message(message, limit){
     for ( let i = 0; i < limit-1; i++ ) {
       line[i+1] = message.indexOf(targetStr, line[i] + 1);
     }
-    return '<div class=\"was_folded\"></div><pre style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>';
+    return '<div class=\"was_folded\"></div><pre class=\"'+font_class+'\" style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>';
   }
   return false;
 }
@@ -58,7 +58,9 @@ function fold_long_sentences(message_object){
     return false;
   }
 
-  var str = slice_message(message, setting.line_count_long_sentences)
+  var font_class = message_object.find('pre').attr("class");
+
+  var str = slice_message(message, setting.line_count_long_sentences, font_class)
   if ( str ){
     message_object.find('pre').hide();
     message_object.find('pre').after(str);
@@ -75,7 +77,9 @@ function hide_reply_message(message_object){
     return false;
   }
 
-  var str = slice_message(message_object.find('pre').html(), setting.line_count_repry)
+  var font_class = message_object.find('pre').attr("class");
+
+  var str = slice_message(message_object.find('pre').html(), setting.line_count_repry, font_class)
   if ( str ){
     message_object.find('pre').hide();
     message_object.find('pre').after(str);
@@ -107,7 +111,8 @@ function rewrite_message(){
 
       // 自分宛てに通知された場合は処理除外する
       // [class 仕様] 通知ありTO : fzprrx / 通知ありRE : xnqWz
-      if( $(this).hasClass('xnqWz') || $(this).hasClass('fzprrx') ){
+      // [class 仕様 ダークモード] 通知ありTO : fqBBek / 通知ありRE : yVguV
+      if( $(this).hasClass('xnqWz') || $(this).hasClass('fzprrx') || $(this).hasClass('fqBBek') || $(this).hasClass('yVguV') ){
         return true;
       }
 
