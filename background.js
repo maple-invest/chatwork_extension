@@ -259,6 +259,24 @@ function draw_tool_menu(){
         setting.cwt_tool_suspend = !setting.cwt_tool_suspend
         chrome.storage.sync.set({ 'cwt_tool_suspend': setting.cwt_tool_suspend });
         draw_suspend_status();
+
+        $("[id^='_messageId']").each(function(){
+          // 処理されてないメッセージはスキップ
+          if( $(this).find('.was_folded').html() == null ){
+            return true;
+          }
+          if( setting.cwt_tool_suspend ){
+            $(this).find('.cwt_origin').show('slow');
+            $(this).find('.cwt_made').hide('slow');
+            $(this).find('pre').off();
+          }else{
+            $(this).find('.cwt_origin').hide('slow');
+            $(this).find('.cwt_made').show('slow');
+            $(this).find('pre').off().on('click', function() {
+              $(this).parent().find('pre').slideToggle('slow');
+            });
+          }
+        });
       });
     },
     "mouseleave": function(){
