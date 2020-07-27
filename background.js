@@ -208,9 +208,10 @@ function draw_tool_menu(){
   // メニューを描画
   $("#cwt_menu").on({
     "mouseenter": function(){
-      $(this).append('<div class=\"guide\" style=\"position: absolute;\">')
-      style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #6091d3; background: #FFF; border: solid 2px #6091d3; border-radius: 7px;\""
-      $(this).find(".guide").append('<div id=\"cwt_menu_return\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> 省略表示のON/OFFを反転</div>')
+      $(this).append('<div class=\"guide\" style=\"position: absolute;\">');
+      style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #6091d3; background: #FFF; border: solid 2px #6091d3; border-radius: 7px;\"";
+      $(this).find(".guide").append('<div id=\"cwt_menu_return\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> 省略表示のON/OFFを反転</div>');
+      $(this).find(".guide").append('<div id=\"cwt_option_link\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> オプション画面を開く</div>');
 
       // return 実行時の処理
       $("#cwt_menu_return").on("click", function() {
@@ -221,6 +222,11 @@ function draw_tool_menu(){
           }
           $(this).find('pre').slideToggle('slow');
         });
+      });
+      // option 実行時の処理
+      $("#cwt_option_link").on("click", function() {
+        // window.opne等で開くとchromeにブロックされるのでchromeAPIを利用
+        chrome.runtime.sendMessage({message: "option"});
       });
     },
     "mouseleave": function(){
