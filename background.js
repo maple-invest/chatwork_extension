@@ -216,11 +216,11 @@ function draw_suspend_status(){
   if( setting.cwt_tool_suspend ){
     $("#cwt_menu_top_img").attr('src', menu_off_img_url);
     $("#cwt_menu_toggle img").attr('src', menu_toggle_off_img_url);
-    $("#cwt_menu_toggle span").html('省略機能をONにする');
+    $("#cwt_menu_toggle span").html('省略機能 ON [Ctrl+Space]');
   }else{
     $("#cwt_menu_top_img").attr('src', menu_on_img_url);
     $("#cwt_menu_toggle img").attr('src', menu_toggle_on_img_url);
-    $("#cwt_menu_toggle span").html('省略機能をOFFする');
+    $("#cwt_menu_toggle span").html('省略機能 OFF [Ctrl+Space]');
   }
 }
 
@@ -259,7 +259,7 @@ function draw_tool_menu(){
       $(this).append('<div class=\"guide\" style=\"position: absolute;\">');
       style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #6091d3; background: #FFF; border: solid 1px #6091d3; border-radius: 3px;\"";
 
-      $(this).find(".guide").append('<div id=\"cwt_menu_toggle\" '+style+'><img src=\"\" height="24"\"></img><span>省略機能をOFFする</span></div>');
+      $(this).find(".guide").append('<div id=\"cwt_menu_toggle\" '+style+'><img src=\"\" height="24"\"></img><span>省略機能 OFF [Ctrl+Space]</span></div>');
       $(this).find(".guide").append('<div id=\"cwt_menu_option\" '+style+'><img src=\"'+menu_option_img_url+'\" height="24"\"></img> オプション画面を開く</div>');
       $(this).find(".guide").append('<div id=\"cwt_menu_return\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> 省略表示のON/OFFを反転</div>');
       draw_suspend_status();
