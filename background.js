@@ -201,17 +201,18 @@ function view_initial_explanation(){
 function draw_tool_menu(){
   menu_img_url = chrome.extension.getURL('icon48.png');
   menu_return_img_url = chrome.extension.getURL('cwt_menu_return.png');
+  menu_option_img_url = chrome.extension.getURL('cwt_menu_option.png');
 
   // ヘッダーにアイコンを追加
-  $('#_roomTitle').after('<div id=\"cwt_menu\"><img src=\"'+menu_img_url+'\" height="24"\"></div>')
+  $('#_roomTitle').after('<div id=\"cwt_menu\"><img src=\"'+menu_img_url+'\" height="24"\"><span>　　　　</span></div>')
 
   // メニューを描画
   $("#cwt_menu").on({
     "mouseenter": function(){
       $(this).append('<div class=\"guide\" style=\"position: absolute;\">');
-      style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #6091d3; background: #FFF; border: solid 2px #6091d3; border-radius: 7px;\"";
+      style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #6091d3; background: #FFF; border: solid 1px #6091d3; border-radius: 3px;\"";
       $(this).find(".guide").append('<div id=\"cwt_menu_return\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> 省略表示のON/OFFを反転</div>');
-      $(this).find(".guide").append('<div id=\"cwt_option_link\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> オプション画面を開く</div>');
+      $(this).find(".guide").append('<div id=\"cwt_menu_option\" '+style+'><img src=\"'+menu_option_img_url+'\" height="24"\"></img> オプション画面を開く</div>');
 
       // return 実行時の処理
       $("#cwt_menu_return").on("click", function() {
@@ -224,7 +225,7 @@ function draw_tool_menu(){
         });
       });
       // option 実行時の処理
-      $("#cwt_option_link").on("click", function() {
+      $("#cwt_menu_option").on("click", function() {
         // window.opne等で開くとchromeにブロックされるのでchromeAPIを利用
         chrome.runtime.sendMessage({message: "option"});
       });
