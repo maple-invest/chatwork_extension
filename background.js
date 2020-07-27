@@ -99,6 +99,10 @@ function mark_as_processed(message_object){
 
 // 画面上のメッセージ内容を読み取って書き換え処理を行う
 function rewrite_message(){
+  // 一時無効状態なら処理をスキップ
+  if( setting.cwt_tool_suspend == true ){
+    return false
+  }
   $(function(){
     var my_aid = $('#_myStatusIcon').find('img').data('aid');
     // _messageIdから始まるid要素を取得
@@ -259,6 +263,7 @@ function draw_tool_menu(){
         setting.cwt_tool_suspend = !setting.cwt_tool_suspend
         chrome.storage.sync.set({ 'cwt_tool_suspend': setting.cwt_tool_suspend });
         draw_suspend_status();
+        rewrite_message();
 
         $("[id^='_messageId']").each(function(){
           // 処理されてないメッセージはスキップ
@@ -272,9 +277,6 @@ function draw_tool_menu(){
           }else{
             $(this).find('.cwt_origin').hide('slow');
             $(this).find('.cwt_made').show('slow');
-            $(this).find('pre').off().on('click', function() {
-              $(this).parent().find('pre').slideToggle('slow');
-            });
           }
         });
       });
