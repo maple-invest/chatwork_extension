@@ -224,6 +224,27 @@ function draw_suspend_status(){
   }
 }
 
+function change_suspend_status(){
+  setting.cwt_tool_suspend = !setting.cwt_tool_suspend
+  chrome.storage.sync.set({ 'cwt_tool_suspend': setting.cwt_tool_suspend });
+  draw_suspend_status();
+  rewrite_message();
+
+  $("[id^='_messageId']").each(function(){
+    if( $(this).find('.was_folded').html() == null ){
+      return true;
+    }
+    if( setting.cwt_tool_suspend ){
+      $(this).find('.cwt_origin').show('slow');
+      $(this).find('.cwt_made').hide('slow');
+      $(this).find('pre').off();
+    }else{
+      $(this).find('.cwt_origin').hide('slow');
+      $(this).find('.cwt_made').show('slow');
+    }
+  });
+}
+
 function draw_tool_menu(){
   menu_return_img_url = chrome.extension.getURL('cwt_menu_return.png');
   menu_option_img_url = chrome.extension.getURL('cwt_menu_option.png');
@@ -260,25 +281,7 @@ function draw_tool_menu(){
       });
       // toggle 実行時の処理
       $("#cwt_menu_toggle").on("click", function() {
-        setting.cwt_tool_suspend = !setting.cwt_tool_suspend
-        chrome.storage.sync.set({ 'cwt_tool_suspend': setting.cwt_tool_suspend });
-        draw_suspend_status();
-        rewrite_message();
-
-        $("[id^='_messageId']").each(function(){
-          // 処理されてないメッセージはスキップ
-          if( $(this).find('.was_folded').html() == null ){
-            return true;
-          }
-          if( setting.cwt_tool_suspend ){
-            $(this).find('.cwt_origin').show('slow');
-            $(this).find('.cwt_made').hide('slow');
-            $(this).find('pre').off();
-          }else{
-            $(this).find('.cwt_origin').hide('slow');
-            $(this).find('.cwt_made').show('slow');
-          }
-        });
+        change_suspend_status();
       });
     },
     "mouseleave": function(){
@@ -306,5 +309,13 @@ window.onload = function(){
     });
 
     create_sub_observer();
+
+    // ショートカット登録
+    $(window).keydown(function(event){
+      if(event.ctrlKey && event.code == 'Space'){
+        change_suspend_status();
+        return false;
+      }
+    });
   });
 }
