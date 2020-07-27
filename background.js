@@ -39,7 +39,7 @@ function slice_message(message, limit, font_class){
     for ( let i = 0; i < limit-1; i++ ) {
       line[i+1] = message.indexOf(targetStr, line[i] + 1);
     }
-    return '<div class=\"was_folded\"></div><pre class=\"'+font_class+'\" style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>';
+    return '<div class=\"was_folded\"></div><pre class=\"'+font_class+' cwt_made\" style=\"border-bottom: dotted 4px #B7CFD3;\">'+message.slice( 0, line[limit-1] )+'</pre>';
   }
   return false;
 }
@@ -62,6 +62,7 @@ function fold_long_sentences(message_object){
 
   var str = slice_message(message, setting.line_count_long_sentences, font_class)
   if ( str ){
+    message_object.find('pre').addClass("cwt_origin");
     message_object.find('pre').hide();
     message_object.find('pre').after(str);
     return true;
@@ -81,6 +82,7 @@ function hide_reply_message(message_object){
 
   var str = slice_message(message_object.find('pre').html(), setting.line_count_repry, font_class)
   if ( str ){
+    message_object.find('pre').addClass("cwt_origin");
     message_object.find('pre').hide();
     message_object.find('pre').after(str);
     return true;
