@@ -5,7 +5,8 @@ var setting = {
   'line_count_repry': 1,
   'line_count_long_sentences': 5,
   'fold_repry': true,
-  'fold_long_sentences': true
+  'fold_long_sentences': true,
+  'cwt_tool_suspend' : false
 }
 
 function load_option(){
@@ -13,7 +14,8 @@ function load_option(){
     'line_count_repry',
     'line_count_long_sentences',
     'fold_repry',
-    'fold_long_sentences'], function(items) {
+    'fold_long_sentences',
+    'cwt_tool_suspend'], function(items) {
       if( items.fold_repry == null ){
         chrome.storage.sync.set(setting);
       }else{
@@ -21,6 +23,7 @@ function load_option(){
         setting.line_count_long_sentences = items.line_count_long_sentences;
         setting.fold_repry = items.fold_repry;
         setting.fold_long_sentences = items.fold_long_sentences;
+        setting.cwt_tool_suspend = items.cwt_tool_suspend;
       }
   });
 }
@@ -200,21 +203,41 @@ function view_initial_explanation(){
   });
 }
 
+var menu_on_img_url = chrome.extension.getURL('icon48.png');
+var menu_off_img_url = chrome.extension.getURL('icon48_off.png');
+var menu_toggle_on_img_url = chrome.extension.getURL('cwt_menu_toggle_on.png');
+var menu_toggle_off_img_url = chrome.extension.getURL('cwt_menu_toggle_off.png');
+
+function draw_suspend_status(){
+  if( setting.cwt_tool_suspend ){
+    $("#cwt_menu_top_img").attr('src', menu_off_img_url);
+    $("#cwt_menu_toggle img").attr('src', menu_toggle_off_img_url);
+    $("#cwt_menu_toggle span").html('省略機能をONにする');
+  }else{
+    $("#cwt_menu_top_img").attr('src', menu_on_img_url);
+    $("#cwt_menu_toggle img").attr('src', menu_toggle_on_img_url);
+    $("#cwt_menu_toggle span").html('省略機能をOFFする');
+  }
+}
+
 function draw_tool_menu(){
-  menu_img_url = chrome.extension.getURL('icon48.png');
   menu_return_img_url = chrome.extension.getURL('cwt_menu_return.png');
   menu_option_img_url = chrome.extension.getURL('cwt_menu_option.png');
 
   // ヘッダーにアイコンを追加
-  $('#_roomTitle').after('<div id=\"cwt_menu\"><img src=\"'+menu_img_url+'\" height="24"\"><span>　　　　</span></div>')
+  $('#_roomTitle').after('<div id=\"cwt_menu\"><img id=\"cwt_menu_top_img\" src=\"\" height="24"\"><span>　　　　</span></div>')
+  draw_suspend_status();
 
   // メニューを描画
   $("#cwt_menu").on({
     "mouseenter": function(){
       $(this).append('<div class=\"guide\" style=\"position: absolute;\">');
       style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #6091d3; background: #FFF; border: solid 1px #6091d3; border-radius: 3px;\"";
-      $(this).find(".guide").append('<div id=\"cwt_menu_return\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> 省略表示のON/OFFを反転</div>');
+
+      $(this).find(".guide").append('<div id=\"cwt_menu_toggle\" '+style+'><img src=\"\" height="24"\"></img><span>省略機能をOFFする</span></div>');
       $(this).find(".guide").append('<div id=\"cwt_menu_option\" '+style+'><img src=\"'+menu_option_img_url+'\" height="24"\"></img> オプション画面を開く</div>');
+      $(this).find(".guide").append('<div id=\"cwt_menu_return\" '+style+'><img src=\"'+menu_return_img_url+'\" height="24"\"></img> 省略表示のON/OFFを反転</div>');
+      draw_suspend_status();
 
       // return 実行時の処理
       $("#cwt_menu_return").on("click", function() {
@@ -230,6 +253,12 @@ function draw_tool_menu(){
       $("#cwt_menu_option").on("click", function() {
         // window.opne等で開くとchromeにブロックされるのでchromeAPIを利用
         chrome.runtime.sendMessage({message: "option"});
+      });
+      // toggle 実行時の処理
+      $("#cwt_menu_toggle").on("click", function() {
+        setting.cwt_tool_suspend = !setting.cwt_tool_suspend
+        chrome.storage.sync.set({ 'cwt_tool_suspend': setting.cwt_tool_suspend });
+        draw_suspend_status();
       });
     },
     "mouseleave": function(){
