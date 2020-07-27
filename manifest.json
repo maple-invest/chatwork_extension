@@ -1,7 +1,7 @@
 {
   "name": "chatwork表示スッキリツール",
   "description": "chatworkでメッセージが流れてしまう現象を解決します。長文メッセージと他人宛の返信メッセージを省略表示します。",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "icons": {
       "16": "icon16.png",
       "48": "icon48.png",
