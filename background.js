@@ -187,8 +187,8 @@ function view_initial_explanation(){
     if( items.initial_explanation_skip ){
       return false;
     }else{
-      explanation_1_url = chrome.extension.getURL('explanation_1.png');
-      explanation_2_url = chrome.extension.getURL('explanation_2.png');
+      explanation_1_url = chrome.extension.getURL('img/explanation_1.png');
+      explanation_2_url = chrome.extension.getURL('img/explanation_2.png');
 
       // ToDo : リファクタリング
       $('body').prepend('<div class=\"popup show\"><div class=\"content_back\"></div><div class=\"content\" id=\"cwt_content\"><div style=\"height: 80%; overflow-y: scroll;\"><h1>「Chatwork 表示すっきりツール」をご利用頂き有難うございます！</h1><br/><br/><h2>こんなお悩みを解決します！</h2><ul><li>メッセージが流れる問題</li><li>自分に関係の無い返信メッセージが多くて読みにくい</li><li>長文メッセージが多いとスクロールが大変</li></ul><br/><br/><h2>このツールができること</h2><ul><li>長文メッセージの折りたたみ表示</li><li>他人宛の返信メッセージの折りたたみ表示</li><li>自分宛てに通知されるメッセージは折りたたみません</li></ul><img src=\"'+explanation_1_url+'\", width=\"100%\"><br/><img src=\"'+explanation_2_url+'\", width=\"100%\"></div><button class=\"btn-square\" id=\"close\">使ってみる！</button></div><div class=\"content_back\"></div></div>');
@@ -207,10 +207,10 @@ function view_initial_explanation(){
   });
 }
 
-var menu_on_img_url = chrome.extension.getURL('icon48.png');
-var menu_off_img_url = chrome.extension.getURL('icon48_off.png');
-var menu_toggle_on_img_url = chrome.extension.getURL('cwt_menu_toggle_on.png');
-var menu_toggle_off_img_url = chrome.extension.getURL('cwt_menu_toggle_off.png');
+var menu_on_img_url = chrome.extension.getURL('img/icon48.png');
+var menu_off_img_url = chrome.extension.getURL('img/icon48_off.png');
+var menu_toggle_on_img_url = chrome.extension.getURL('img/cwt_menu_toggle_on.png');
+var menu_toggle_off_img_url = chrome.extension.getURL('img/cwt_menu_toggle_off.png');
 
 function draw_suspend_status(){
   if( setting.cwt_tool_suspend ){
@@ -246,8 +246,8 @@ function change_suspend_status(){
 }
 
 function draw_tool_menu(){
-  menu_return_img_url = chrome.extension.getURL('cwt_menu_return.png');
-  menu_option_img_url = chrome.extension.getURL('cwt_menu_option.png');
+  menu_return_img_url = chrome.extension.getURL('img/cwt_menu_return.png');
+  menu_option_img_url = chrome.extension.getURL('img/cwt_menu_option.png');
 
   // ヘッダーにアイコンを追加
   $('#_roomTitle').after('<div id=\"cwt_menu\"><img id=\"cwt_menu_top_img\" src=\"\" height="24"\"><span>　　　　</span></div>')

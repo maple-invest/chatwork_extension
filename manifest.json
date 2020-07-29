@@ -3,9 +3,9 @@
   "description": "chatworkでメッセージが流れてしまう現象を解決します。長文メッセージと他人宛の返信メッセージを省略表示します。",
   "version": "1.3.1",
   "icons": {
-      "16": "icon16.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
+      "16": "img/icon16.png",
+      "48": "img/icon48.png",
+      "128": "img/icon128.png"
   },
   "permissions": [
     "storage"
@@ -23,6 +23,6 @@
   "web_accessible_resources": [
     "*.png"
   ],
-  "options_page": "option.html",
+  "options_page": "option/option.html",
   "manifest_version": 2
 }
