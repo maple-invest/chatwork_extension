@@ -253,6 +253,15 @@ function draw_tool_menu(){
   $('#_roomTitle').after('<div id=\"cwt_menu\"><img id=\"cwt_menu_top_img\" src=\"\" height="24"\"><span>　　　　</span></div>')
   draw_suspend_status();
 
+  // 初回起動時に注目ポップアップを表示
+  chrome.storage.sync.get('initial_explanation_skip', function(items) {
+    if( items.initial_explanation_skip == false || items.initial_explanation_skip == null ){
+      initial_style = "style=\"widht: 100px; padding: 0.5em 1em; font-weight: bold; color: #df5656; background: #FFF; border: solid 2px #df5656; border-radius: 3px;\"";
+      $('#cwt_menu').append('<div class=\"initial_explanation\" style=\"position: absolute;\">');
+      $('#cwt_menu').find(".initial_explanation").append('<div '+initial_style+'>↑拡張機能メニューはこちら！</div>');
+    }
+  });
+
   // メニューを描画
   $("#cwt_menu").on({
     "mouseenter": function(){
@@ -286,6 +295,7 @@ function draw_tool_menu(){
     },
     "mouseleave": function(){
       $(this).find('.guide').remove();
+      $(this).find('.initial_explanation').remove();
     }
   });
 }
