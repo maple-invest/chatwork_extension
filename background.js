@@ -119,9 +119,13 @@ function rewrite_message(){
       }
 
       // 自分宛てに通知された場合は処理除外する
-      // [class 仕様] 通知ありTO : fzprrx / 通知ありRE : xnqWz
-      // [class 仕様 ダークモード] 通知ありTO : fqBBek / 通知ありRE : yVguV
-      if( $(this).hasClass('xnqWz') || $(this).hasClass('fzprrx') || $(this).hasClass('fqBBek') || $(this).hasClass('yVguV') ){
+      // 正規表現にて下記パターンの一致を判定する
+      // TOALL : data-cwtag="[toall]"
+      // 自分宛てRe : data-cwtag="[rp aid=(account_id) to=**********]"
+      // 自分宛てTo : data-cwtag="[To:(account_id)]"
+      var data_cwtag = $(this).find('pre').find('div').data('cwtag');
+      var regex = RegExp(account_id+'|toall')
+      if( data_cwtag && data_cwtag.match(regex) ){
         return true;
       }
 
