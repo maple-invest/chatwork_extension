@@ -168,7 +168,7 @@ var sub_observer = new MutationObserver(rewrite_message);
 var main_observer = new MutationObserver(create_sub_observer);
 
 function create_sub_observer(){
-  load_container('.sc-dphlzf, .hnKbti', function (sub_container) {
+  load_container('#_timeLine > div', function (sub_container) {
 
     //サブ要素（チャット内でのメッセージロード時に変化）
     sub_observer.disconnect();
@@ -304,7 +304,8 @@ window.onload = function(){
   // onload → div要素ロード → オブザーバーset → サブオブザーバーset → rewrite_message実行
   //メイン要素を取得して結果をコールバック関数の引数に渡す
   //要素が取得できるまで待機して実行される
-  load_container('.sc-epGmkI, .cMoFQn', function (main_container) {
+  load_container('#_chatContent', function (main_container) {
+
     // 初回起動時に説明画面を表示する
     view_initial_explanation();
 
