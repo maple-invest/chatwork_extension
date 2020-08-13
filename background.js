@@ -1,6 +1,7 @@
 // Copyright (c) 2020 メープル＠ペンギン会員 All rights reserved.
 
 // 初期設定のロード
+var account_id = 0
 var setting = {
   'line_count_repry': 1,
   'line_count_long_sentences': 5,
@@ -104,7 +105,6 @@ function rewrite_message(){
     return false
   }
   $(function(){
-    var my_aid = $('#_myStatusIcon').find('img').data('aid');
     // _messageIdから始まるid要素を取得
     $("[id^='_messageId']").each(function(){
       //既に処理済みのメッセージの場合は処理除外する/未処理ならフラグ追加
@@ -114,7 +114,7 @@ function rewrite_message(){
       mark_as_processed($(this));
 
       // 自分の投稿メッセージは処理除外
-      if( $(this).find('._avatarHoverTip').data('aid') == my_aid ){
+      if( $(this).find('._avatarHoverTip').data('aid') == account_id ){
         return true;
       }
 
@@ -311,6 +311,9 @@ window.onload = function(){
 
     // メニューを描画する
     draw_tool_menu();
+
+    // 省略処理の判定に利用するaccount_idを取得しておく
+    account_id = $("#_accountId").text();
 
     //監視の開始 メイン要素（チャット切り替え時に変化）
     main_observer.disconnect();
