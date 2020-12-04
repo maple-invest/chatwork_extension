@@ -254,7 +254,7 @@ function draw_tool_menu(){
   menu_option_img_url = chrome.extension.getURL('img/cwt_menu_option.png');
 
   // ヘッダーにアイコンを追加
-  $('#_roomTitle').after('<div id=\"cwt_menu\"><img id=\"cwt_menu_top_img\" src=\"\" height="24"\"><span>　　　　</span></div>')
+  $('#_roomTitle').after('<div id=\"cwt_menu\" style=\"z-index: 99;\"><img id=\"cwt_menu_top_img\" src=\"\" height="24"\"><span>　　　　</span></div>')
   draw_suspend_status();
 
   // 初回起動時に注目ポップアップを表示
